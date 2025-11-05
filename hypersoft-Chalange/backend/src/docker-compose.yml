@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # Serviço da API .NET
+  api:
+    build:
+      context: . # O contexto é o diretório atual (src), onde o Dockerfile está
+      dockerfile: Dockerfile
+    container_name: hypesoft-api
+    ports:
+      # Mapeia a porta 5001 da sua máquina para a 8080 do contêiner
+      - "5001:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # A connection string aponta para o serviço 'db' (nome do host do MongoDB no Docker)
+      - MongoSettings__ConnectionString=mongodb://db:27017 
+      - MongoSettings__DatabaseName=HypesoftDb
+    depends_on:
+      - db # Garante que o serviço 'db' inicie antes da 'api'
+
+  # Serviço do Banco de Dados MongoDB
+  db:
+    image: mongo:latest # Usa a imagem oficial do MongoDB
+    container_name: hypesoft-mongo
+    ports:
+      # Expõe a porta do MongoDB para a sua máquina (útil para usar o MongoDB Compass)
+      - "27017:27017"
+    volumes:
+      # Persiste os dados do MongoDB em um volume para não perdê-los ao reiniciar o contêiner
+      - mongo-data:/data/db
+
+volumes:
+  # Define o volume para persistência de dados do MongoDB
+  mongo-data:
+
