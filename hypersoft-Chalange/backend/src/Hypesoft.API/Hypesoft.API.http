@@ -1,6 +1,6 @@
-@Hypesoft.API_HostAddress = http://localhost:5258
+@Hypesoft.API_HostAddress = http://localhost:5029
 
-GET {{Hypesoft.API_HostAddress}}/weatherforecast/
+GET {{Hypesoft.API_HostAddress}}/healthcheck/
 Accept: application/json
 
 ###
