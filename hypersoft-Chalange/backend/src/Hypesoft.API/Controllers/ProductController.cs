@@ -17,6 +17,11 @@ public class ProductController : ControllerBase
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Retorna todos os Produtos do Db.
+    /// </summary>
+    /// <returns>Retorna uma lista de todos os Produtos no DB </returns>
+    
     [HttpGet]
     public async Task<IActionResult> GetProducts()
     {
@@ -24,6 +29,10 @@ public class ProductController : ControllerBase
         return Ok(products);
     }
 
+    /// <summary>
+    /// Cria um Produto no Db.
+    /// </summary>
+    /// <returns>retorna 201 Created </returns>
     [HttpPost]
     public async Task<IActionResult> CreateProduct([FromBody] CreateProductCommand command)
     {
