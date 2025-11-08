@@ -13,7 +13,7 @@
 
         public GetProductsQueryHandler(IMongoClient mongoClient, IConfiguration configuration)
         {
-            var databaseName = configuration.GetSection("MongoDbSettings")["DatabaseName"];
+            var databaseName = configuration.GetSection("MONGODB")["DBNAME"];
             var database = mongoClient.GetDatabase(databaseName);
             _productsCollection = database.GetCollection<Product>("products");
         }
