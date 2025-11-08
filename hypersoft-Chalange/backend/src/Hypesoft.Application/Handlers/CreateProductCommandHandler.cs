@@ -15,7 +15,7 @@ using MongoDB.Driver;
         {
             var databaseName = configuration.GetSection("MONGODB")["DBNAME"];
             var database = mongoClient.GetDatabase(databaseName);
-            _productsCollection = database.GetCollection<Product>("Products");
+            _productsCollection = database.GetCollection<Product>("products");
         }
 
         public async Task Handle(CreateProductCommand request, CancellationToken cancellationToken)
