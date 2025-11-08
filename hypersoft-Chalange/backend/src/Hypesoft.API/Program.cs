@@ -1,5 +1,8 @@
 using System.Reflection;
+using Hypesoft.Application.Commands;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Driver;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -9,11 +12,21 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddHealthChecks();
 builder.Services.AddSwaggerGen(options =>
+    {
+        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    });
+
+var mongoDbSettings = builder.Configuration.GetSection("MongoDbSettings");
+builder.Services.AddSingleton<IMongoClient>(serviceProvider =>
 {
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    var connectionString = mongoDbSettings["ConnectionString"];
+    return new MongoClient(connectionString);
 });
 
+builder.Services.AddControllers();
+builder.Services.AddMediatR(cfg => 
+    cfg.RegisterServicesFromAssembly(typeof(Hypesoft.Application.Queries.GetProductsQuery).Assembly));
 
 var app = builder.Build();
 
@@ -26,4 +39,4 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
